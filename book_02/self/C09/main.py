@@ -1,4 +1,12 @@
-import tkinter
+import tkinter as tk
+
+# import os
+# print(os.getcwd())
+
+class Window():
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
 
 class Cursor():
     def __init__(self, icon):
@@ -12,32 +20,35 @@ class Mouse():
         self.y = 0
         self.c = 0
 
-m = Mouse()
-icon = "./assets/neko_cursor.png"
-cs = Cursor(icon)
+def mouse_move(e):
+    m.x = e.x
+    m.y = e.y
 
 def game():
     if 24 <= m.y and m.y < 24+72*8 and 24 <= m.y and m.y < 24+72*10:
         cursor.x = int((m.x - 24) / 72)
         cursor.y = int((m.y - 24) / 72)
-    fnt = ("Times New Roman", 30)
-    txt = "mouse({}, {}, {})".format(m.x, m.y, m.c)
-    cvs.delete("TEST")
-    cvs.create_text(456, 384, text=txt, fill="black", font=fnt, tag="TEST")
+    cvs.delete("CURSOR")
+    cvs.create_image(cs.x*72+60, cs.y*72+60, image=cursor, tag="CURSOR")
     root.after(100, game)
 
-root = tkinter.Tk()
+
+m = Mouse()
+cs = Cursor("./assets/neko_cursor.png")
+
+root = tk.Tk()
 root.title("マウス入力")
 root.resizable(False, False)
+root.bind("<Motion>", mouse_move)
 
-wd = 1000
-hg = 800
-cvs = tkinter.Canvas(root, width=wd, height=hg)
+window = Window(1000, 800)
+
+cvs = tk.Canvas(root, width=window.width, height=window.height)
 cvs.pack()
 
-bg = tkinter.PhotoImage(file="./assets/neko_bg.png")
-cursor = tkinter.PhotoImage(cs.icon)
-
+bg = tk.PhotoImage(file="./assets/neko_bg.png")
+cursor = tk.PhotoImage(file=cs.icon)
+cvs.create_image(456, 384, image=bg)
 
 game()
 root.mainloop()
